@@ -42,14 +42,11 @@ const PaymentTransferModule = () => {
       return
     }
 
-    const newBalance = currentBalance - amountValue
-    setCurrentBalance(newBalance)
-
     setTransactionDetails({
       recipient,
       amount,
       note,
-      balance: newBalance
+      balance: currentBalance
     })
 
     router.push('/biometricAuth')
@@ -70,6 +67,7 @@ const PaymentTransferModule = () => {
         <AppInput
           style={styles.input}
           placeholder='Recipient'
+          placeholderTextColor={COLORS.primary}
           value={recipient}
           onChangeText={setRecipient}
         />
@@ -77,6 +75,7 @@ const PaymentTransferModule = () => {
         <AppInput
           style={styles.input}
           placeholder='Amount'
+          placeholderTextColor={COLORS.primary}
           value={amount}
           onChangeText={setAmount}
           keyboardType='numeric'
@@ -85,6 +84,7 @@ const PaymentTransferModule = () => {
         <AppInput
           style={styles.input}
           placeholder='Note (Optional)'
+          placeholderTextColor={COLORS.primary}
           value={note}
           onChangeText={setNote}
         />
@@ -95,7 +95,7 @@ const PaymentTransferModule = () => {
           disabled={isProcessing}
         >
           <AppText style={styles.buttonText}>
-            {isProcessing ? 'Processing...' : 'Transfer Payment'}
+            {isProcessing ? 'Processing...' : 'Transfer'}
           </AppText>
         </TouchableOpacity>
       </View>
