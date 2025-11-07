@@ -1,5 +1,7 @@
 export const COLORS = {
-  primary: '#0000e6'
+  primary: '#0000e6',
+  offwhite: '#f6efec',
+  lightBlue: '#eaf3fe'
 }
 
 export const RADIUS = {
