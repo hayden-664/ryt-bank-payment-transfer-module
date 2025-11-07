@@ -3,7 +3,8 @@ import { useTransactionStore } from '@/stores/useTransactionStore'
 import { COLORS, RADIUS } from '@/constants/theme'
 import { useRouter } from 'expo-router'
 import React from 'react'
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { ScrollView, StyleSheet, View } from 'react-native'
+import Button from '@/components/Button'
 
 const TransactionConfirmation: React.FC = () => {
   const router = useRouter()
@@ -15,50 +16,53 @@ const TransactionConfirmation: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Heading style={styles.title}>Transaction Confirmed</Heading>
+      <Heading weight='regular' style={styles.title}>
+        Transaction Confirmed
+      </Heading>
 
-      <ScrollView style={styles.detailsContainer}>
-        <View style={styles.detailRow}>
-          <AppText style={styles.detailLabel}>Recipient:</AppText>
-          <AppText style={styles.detailValue}>
-            {transactionDetails.recipient}
-          </AppText>
-        </View>
+      <View style={styles.detailsContainer}>
+        <View style={styles.detailsWrapper}>
+          <View style={styles.detailRow}>
+            <AppText style={styles.detailLabel}>Recipient:</AppText>
+            <AppText style={styles.detailValue}>
+              {transactionDetails.recipient}
+            </AppText>
+          </View>
 
-        <View style={styles.detailRow}>
-          <AppText style={styles.detailLabel}>Amount:</AppText>
-          <AppText style={styles.detailValue}>
-            ${transactionDetails.amount}
-          </AppText>
-        </View>
+          <View style={styles.detailRow}>
+            <AppText style={styles.detailLabel}>Amount:</AppText>
+            <AppText style={styles.detailValue}>
+              ${transactionDetails.amount}
+            </AppText>
+          </View>
 
-        <View style={styles.detailRow}>
-          <AppText style={styles.detailLabel}>Note:</AppText>
-          <AppText style={styles.detailValue}>
-            {transactionDetails.note || 'None'}
-          </AppText>
-        </View>
+          <View style={styles.detailRow}>
+            <AppText style={styles.detailLabel}>Note:</AppText>
+            <AppText style={styles.detailValue}>
+              {transactionDetails.note || 'None'}
+            </AppText>
+          </View>
 
-        <View style={styles.detailRow}>
-          <AppText style={styles.detailLabel}>New Balance:</AppText>
-          <AppText style={styles.detailValue}>
-            ${transactionDetails.balance.toFixed(2)}
-          </AppText>
-        </View>
+          <View style={styles.detailRow}>
+            <AppText style={styles.detailLabel}>Balance:</AppText>
+            <AppText style={styles.detailValue}>
+              ${transactionDetails.balance.toFixed(2)}
+            </AppText>
+          </View>
 
-        <View style={styles.detailRow}>
-          <AppText style={styles.detailLabel}>Transaction ID:</AppText>
-          <AppText style={styles.detailValue}>
-            TXN-{Math.floor(Math.random() * 1000000)}
-          </AppText>
+          <View style={styles.detailRow}>
+            <AppText style={styles.detailLabel}>Transaction ID:</AppText>
+            <AppText style={styles.detailValue}>
+              TXN-{Math.floor(Math.random() * 1000000)}
+            </AppText>
+          </View>
         </View>
-      </ScrollView>
-      <TouchableOpacity
-        style={styles.buttonContainer}
+      </View>
+      <Button
+        title='Back to Home'
         onPress={handleBackToHome}
-      >
-        <AppText style={styles.buttonText}>Back to Home</AppText>
-      </TouchableOpacity>
+        variant='secondary'
+      />
     </View>
   )
 }
@@ -66,12 +70,10 @@ const TransactionConfirmation: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.offwhite,
     padding: 20
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
     marginBottom: 30,
     textAlign: 'center',
     color: COLORS.primary
@@ -80,10 +82,17 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 30
   },
+  detailsWrapper: {
+    backgroundColor: 'white',
+    padding: 15,
+    borderRadius: RADIUS.default,
+    display: 'flex',
+    gap: 15,
+    overflowY: 'auto'
+  },
   detailRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20
+    justifyContent: 'space-between'
   },
   detailLabel: {
     fontSize: 16,
@@ -93,18 +102,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333'
-  },
-  buttonContainer: {
-    alignItems: 'center',
-    padding: 15,
-    borderWidth: 1,
-    borderColor: COLORS.primary,
-    borderRadius: RADIUS.default
-  },
-  buttonText: {
-    color: COLORS.primary,
-    fontSize: 16,
-    fontWeight: 'bold'
   }
 })
 

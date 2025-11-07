@@ -1,21 +1,19 @@
 import React from 'react'
 import { Text, TextProps, TextInputProps, TextInput } from 'react-native'
-import { COLORS } from '@/constants/theme'
+
+type HeadingProps = TextProps & {
+  weight?: 'regular' | 'bold'
+}
 
 type AppTextProps = TextProps & {
   weight?: 'regular' | 'medium' | 'bold'
 }
 
-export function Heading(props: TextProps) {
-  return (
-    <Text
-      {...props}
-      style={[
-        { fontFamily: 'Fraunces_700Bold', fontSize: 24, color: COLORS.primary },
-        props.style
-      ]}
-    />
-  )
+export function Heading({ weight = 'bold', style, ...props }: HeadingProps) {
+  const fontFamily =
+    weight === 'bold' ? 'Fraunces_700Bold' : 'Fraunces_400Regular'
+
+  return <Text {...props} style={[{ fontFamily, fontSize: 34 }, style]} />
 }
 
 export function AppText({ weight = 'regular', style, ...props }: AppTextProps) {
@@ -23,8 +21,8 @@ export function AppText({ weight = 'regular', style, ...props }: AppTextProps) {
     weight === 'medium'
       ? 'Poppins_500Medium'
       : weight === 'bold'
-        ? 'Poppins_700Bold'
-        : 'Poppins_400Regular'
+      ? 'Poppins_700Bold'
+      : 'Poppins_400Regular'
 
   return <Text {...props} style={[{ fontFamily, fontSize: 16 }, style]} />
 }

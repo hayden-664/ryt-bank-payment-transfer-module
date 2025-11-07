@@ -3,18 +3,15 @@ import { useTransactionStore } from '@/stores/useTransactionStore'
 import { COLORS, RADIUS } from '@/constants/theme'
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
+import Button from '@/components/Button'
 
 const PaymentTransferModule = () => {
   const router = useRouter()
   const [recipient, setRecipient] = useState('')
   const [amount, setAmount] = useState('')
   const [note, setNote] = useState('')
-  const [isProcessing, setIsProcessing] = useState(false)
   const currentBalance = useTransactionStore((state) => state.currentBalance)
-  const setCurrentBalance = useTransactionStore(
-    (state) => state.setCurrentBalance
-  )
   const setTransactionDetails = useTransactionStore(
     (state) => state.setTransactionDetails
   )
@@ -54,7 +51,9 @@ const PaymentTransferModule = () => {
 
   return (
     <View style={styles.container}>
-      <Heading style={styles.title}>Payment Transfer</Heading>
+      <Heading weight='regular' style={styles.title}>
+        Transfer
+      </Heading>
 
       <View style={styles.form}>
         <View style={styles.balanceContainer}>
@@ -67,7 +66,7 @@ const PaymentTransferModule = () => {
         <AppInput
           style={styles.input}
           placeholder='Recipient'
-          placeholderTextColor={COLORS.primary}
+          placeholderTextColor='#9299a1'
           value={recipient}
           onChangeText={setRecipient}
         />
@@ -75,7 +74,7 @@ const PaymentTransferModule = () => {
         <AppInput
           style={styles.input}
           placeholder='Amount'
-          placeholderTextColor={COLORS.primary}
+          placeholderTextColor='#9299a1'
           value={amount}
           onChangeText={setAmount}
           keyboardType='numeric'
@@ -84,20 +83,12 @@ const PaymentTransferModule = () => {
         <AppInput
           style={styles.input}
           placeholder='Note (Optional)'
-          placeholderTextColor={COLORS.primary}
+          placeholderTextColor='#9299a1'
           value={note}
           onChangeText={setNote}
         />
 
-        <TouchableOpacity
-          style={[styles.button, isProcessing && styles.buttonDisabled]}
-          onPress={handleTransfer}
-          disabled={isProcessing}
-        >
-          <AppText style={styles.buttonText}>
-            {isProcessing ? 'Processing...' : 'Transfer'}
-          </AppText>
-        </TouchableOpacity>
+        <Button title='Transfer' onPress={handleTransfer} variant='primary' />
       </View>
     </View>
   )
@@ -106,22 +97,22 @@ const PaymentTransferModule = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.offwhite,
     padding: 20
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
     marginBottom: 30,
-    textAlign: 'center',
-    color: COLORS.primary
+    textAlign: 'center'
   },
   form: {
-    flex: 1
+    padding: 15,
+    borderRadius: RADIUS.default,
+    backgroundColor: 'white'
   },
   balanceContainer: {
     backgroundColor: '#e6e6ff',
-    padding: 15,
+    paddingVertical: 40,
+    paddingHorizontal: 15,
     borderRadius: RADIUS.default,
     marginBottom: 30,
     alignItems: 'center'
@@ -138,28 +129,12 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: COLORS.primary,
+    borderColor: COLORS.offwhite,
     borderRadius: RADIUS.default,
     padding: 15,
     marginBottom: 20,
     fontSize: 16,
     backgroundColor: '#fff'
-  },
-  button: {
-    backgroundColor: COLORS.primary,
-    borderWidth: 1,
-    borderColor: 'white',
-    borderRadius: RADIUS.default,
-    padding: 15,
-    alignItems: 'center'
-  },
-  buttonDisabled: {
-    backgroundColor: '#cccccc'
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold'
   },
   cancelButton: {
     marginTop: 20,

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Stack } from 'expo-router'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
-import { useFonts, Fraunces_700Bold } from '@expo-google-fonts/fraunces'
+import { useFonts, Fraunces_400Regular, Fraunces_700Bold } from '@expo-google-fonts/fraunces'
 import {
   Poppins_400Regular,
   Poppins_500Medium
@@ -11,6 +11,7 @@ import { COLORS } from '@/constants/theme'
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
+    Fraunces_400Regular,
     Fraunces_700Bold,
     Poppins_400Regular,
     Poppins_500Medium
@@ -40,7 +41,7 @@ export default function RootLayout() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
+  container: { flex: 1, backgroundColor: COLORS.offwhite },
   loadingContainer: {
     flex: 1
   },

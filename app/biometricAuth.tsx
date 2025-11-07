@@ -2,9 +2,10 @@ import { AppText } from '@/components/Typography'
 import { COLORS } from '@/constants/theme'
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
-import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 import * as LocalAuthentication from 'expo-local-authentication'
 import { useTransactionStore } from '@/stores/useTransactionStore'
+import Button from '@/components/Button'
 
 const BiometricAuth: React.FC = () => {
   const router = useRouter()
@@ -20,31 +21,55 @@ const BiometricAuth: React.FC = () => {
     (state) => state.setTransactionDetails
   )
 
+  const handleBackToHome = () => {
+    router.push('/')
+  }
+
   const authenticateWithBiometrics = async () => {
     setIsAuthenticating(true)
 
     try {
-      const hasHardware = await LocalAuthentication.hasHardwareAsync()
-      if (!hasHardware) {
-        Alert.alert('Error', 'Biometric hardware not available')
-        return
-      }
+      // const hasHardware = await LocalAuthentication.hasHardwareAsync()
+      // if (!hasHardware) {
+      //   Alert.alert('Error', 'Biometric hardware not available')
+      //   return
+      // }
 
-      const isEnrolled = await LocalAuthentication.isEnrolledAsync()
-      if (!isEnrolled) {
-        Alert.alert('Error', 'No biometrics enrolled')
-        return
-      }
+      // const isEnrolled = await LocalAuthentication.isEnrolledAsync()
+      // if (!isEnrolled) {
+      //   Alert.alert('Error', 'No biometrics enrolled')
+      //   return
+      // }
 
-      const authResult = await LocalAuthentication.authenticateAsync({
-        promptMessage: 'Authenticate',
-        cancelLabel: 'Cancel',
-        fallbackLabel: 'Use PIN'
-      })
+      // const authResult = await LocalAuthentication.authenticateAsync({
+      //   promptMessage: 'Authenticate',
+      //   cancelLabel: 'Cancel',
+      //   fallbackLabel: 'Use PIN'
+      // })
 
-      if (authResult.success) {
-        await new Promise((resolve) => setTimeout(resolve, 2000))
+      // if (authResult.success) {
+      //   await new Promise((resolve) => setTimeout(resolve, 2000))
 
+      //   const amountValue = parseFloat(transactionDetails.amount)
+      //   const newBalance = currentBalance - amountValue
+
+      //   setCurrentBalance(newBalance)
+      //   setTransactionDetails({
+      //     ...transactionDetails,
+      //     balance: newBalance
+      //   })
+
+      //   router.push('/transactionConfirmation')
+      // } else {
+      //   Alert.alert('Authentication Failed', 'Could not verify your identity')
+      // }
+
+      // For testing
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      const simulatedSuccess = true
+
+      if (simulatedSuccess) {
         const amountValue = parseFloat(transactionDetails.amount)
         const newBalance = currentBalance - amountValue
 
@@ -53,22 +78,10 @@ const BiometricAuth: React.FC = () => {
           ...transactionDetails,
           balance: newBalance
         })
-
         router.push('/transactionConfirmation')
       } else {
         Alert.alert('Authentication Failed', 'Could not verify your identity')
       }
-
-      // For testing
-      // await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      // const simulatedSuccess = true
-
-      // if (simulatedSuccess) {
-      //   router.push('/transactionConfirmation')
-      // } else {
-      //   Alert.alert('Authentication Failed', 'Could not verify your identity')
-      // }
     } catch (error) {
       console.error('Authentication error:', error)
       Alert.alert('Authentication Error', 'Failed to authenticate')
@@ -84,15 +97,15 @@ const BiometricAuth: React.FC = () => {
         Please authenticate using your biometrics to proceed with the payment
       </AppText>
 
-      <TouchableOpacity
-        style={[styles.button, isAuthenticating && styles.buttonDisabled]}
-        onPress={authenticateWithBiometrics}
-        disabled={isAuthenticating}
-      >
-        <AppText style={styles.buttonText}>
-          {isAuthenticating ? 'Authenticating...' : 'Authenticate'}
-        </AppText>
-      </TouchableOpacity>
+      <View style={styles.buttonContainer}>
+        <Button
+          title={isAuthenticating ? 'Authenticating...' : 'Authenticate'}
+          onPress={authenticateWithBiometrics}
+          variant='primary'
+          disabled={isAuthenticating}
+        />
+        <Button title='Cancel' onPress={handleBackToHome} variant='secondary' />
+      </View>
     </View>
   )
 }
@@ -100,7 +113,7 @@ const BiometricAuth: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.offwhite,
     padding: 20,
     justifyContent: 'center',
     alignItems: 'center'
@@ -118,22 +131,9 @@ const styles = StyleSheet.create({
     color: '#333',
     lineHeight: 22
   },
-  button: {
-    backgroundColor: COLORS.primary,
-    borderWidth: 1,
-    borderColor: 'white',
-    borderRadius: 16,
-    padding: 15,
-    alignItems: 'center',
-    width: '80%'
-  },
-  buttonDisabled: {
-    backgroundColor: '#cccccc'
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold'
+  buttonContainer: {
+    width: '100%',
+    gap: 15
   }
 })
 
