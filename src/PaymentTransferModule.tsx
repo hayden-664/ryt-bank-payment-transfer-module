@@ -1,12 +1,8 @@
 import React, { useState } from 'react'
-import {
-  View,
-  TouchableOpacity,
-  Alert,
-  StyleSheet
-} from 'react-native'
+import { View, TouchableOpacity, Alert, StyleSheet } from 'react-native'
 import { COLORS, RADIUS } from '@/theme'
 import { AppInput, AppText, Heading } from './components/Typography'
+import BiometricAuth from './BiometricAuth'
 
 interface PaymentTransferModuleProps {
   accountBalance: number
@@ -19,6 +15,7 @@ const PaymentTransferModule: React.FC<PaymentTransferModuleProps> = ({
   const [amount, setAmount] = useState('')
   const [note, setNote] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
+  const [showAuth, setShowAuth] = useState(false)
 
   const handleTransfer = () => {
     if (!recipient.trim()) {
@@ -41,6 +38,45 @@ const PaymentTransferModule: React.FC<PaymentTransferModuleProps> = ({
       Alert.alert('Error', 'Insufficient funds')
       return
     }
+
+    setShowAuth(true)
+  }
+
+  const handleAuthSuccess = () => {
+    setIsProcessing(true)
+    // Simulate processing time
+    setTimeout(() => {
+      setIsProcessing(false)
+      Alert.alert('Success', 'Payment transferred successfully')
+      setRecipient('')
+      setAmount('')
+      setNote('')
+    }, 1500)
+  }
+
+  const handleAuthFailure = () => {
+    setShowAuth(false)
+  }
+
+  const handleCancelAuth = () => {
+    setShowAuth(false)
+  }
+
+  if (showAuth) {
+    return (
+      <View style={styles.container}>
+        <BiometricAuth
+          onAuthSuccess={handleAuthSuccess}
+          onAuthFailure={handleAuthFailure}
+        />
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={handleCancelAuth}
+        >
+          <AppText style={styles.cancelButtonText}>Cancel</AppText>
+        </TouchableOpacity>
+      </View>
+    )
   }
 
   return (
@@ -102,13 +138,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 30,
     textAlign: 'center',
-    color: 'COLORS.primary'
+    color: COLORS.primary
   },
   form: {
     flex: 1
   },
   balanceContainer: {
-    backgroundColor: COLORS.lightBlue,
+    backgroundColor: '#e6e6ff',
     padding: 15,
     borderRadius: RADIUS.default,
     marginBottom: 30,
@@ -116,7 +152,7 @@ const styles = StyleSheet.create({
   },
   balanceLabel: {
     fontSize: 16,
-    color: COLORS.primary,
+    color: COLORS.primary
   },
   balanceAmount: {
     fontSize: 24,
