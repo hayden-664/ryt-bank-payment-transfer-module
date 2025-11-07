@@ -10,8 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "com.ryt.payapp",
       "infoPlist": {
-        "NSFaceIDUsageDescription": "This app uses Face ID to authenticate your identity."
+        "NSFaceIDUsageDescription": "This app uses Face ID to authenticate your identity.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -22,7 +24,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.ryt.payapp"
     },
     "web": {
       "output": "static",
@@ -47,6 +50,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "96fa298f-6db5-43e8-9678-0d94063cba76"
+      }
     }
   }
 }
