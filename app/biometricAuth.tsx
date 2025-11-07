@@ -1,55 +1,22 @@
+import { AppText } from '@/components/Typography'
+import { COLORS } from '@/constants/theme'
+import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
-import { View, TouchableOpacity, Alert, StyleSheet } from 'react-native'
-import * as LocalAuthentication from 'expo-local-authentication'
-import { AppText } from './components/Typography'
-import { COLORS } from '@/theme'
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 
-interface BiometricAuthProps {
-  onAuthSuccess: () => void
-  onAuthFailure: () => void
-}
-
-const BiometricAuth: React.FC<BiometricAuthProps> = ({
-  onAuthSuccess,
-  onAuthFailure
-}) => {
+const BiometricAuth: React.FC = () => {
+  const router = useRouter()
   const [isAuthenticating, setIsAuthenticating] = useState(false)
 
   const authenticateWithBiometrics = async () => {
     setIsAuthenticating(true)
-
     try {
-      const hasHardware = await LocalAuthentication.hasHardwareAsync()
-      if (!hasHardware) {
-        Alert.alert('Error', 'Biometric hardware not available')
-        onAuthFailure()
-        setIsAuthenticating(false)
-        return
-      }
+      await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      const isEnrolled = await LocalAuthentication.isEnrolledAsync()
-      if (!isEnrolled) {
-        Alert.alert('Error', 'No biometrics enrolled')
-        onAuthFailure()
-        setIsAuthenticating(false)
-        return
-      }
-
-      const authResult = await LocalAuthentication.authenticateAsync({
-        promptMessage: 'Authenticate',
-        cancelLabel: 'Use PIN',
-        fallbackLabel: 'Use PIN'
-      })
-
-      if (authResult.success) {
-        onAuthSuccess()
-      } else {
-        onAuthFailure()
-      }
+      router.push('/transactionConfirmation')
     } catch (error) {
-      console.error('Authentication error:', error)
+      console.error(error)
       Alert.alert('Authentication Error', 'Failed to authenticate')
-      onAuthFailure()
     } finally {
       setIsAuthenticating(false)
     }

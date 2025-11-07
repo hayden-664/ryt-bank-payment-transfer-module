@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text, TextProps, TextInputProps, TextInput } from 'react-native'
-import { COLORS } from '@/theme'
+import { COLORS } from '@/constants/theme'
 
 type AppTextProps = TextProps & {
   weight?: 'regular' | 'medium' | 'bold'

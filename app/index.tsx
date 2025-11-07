@@ -1,21 +1,23 @@
+import { AppInput, AppText, Heading } from '@/components/Typography'
+import { useTransactionStore } from '@/stores/useTransactionStore'
+import { COLORS, RADIUS } from '@/constants/theme'
+import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
-import { View, TouchableOpacity, Alert, StyleSheet } from 'react-native'
-import { COLORS, RADIUS } from '@/theme'
-import { AppInput, AppText, Heading } from './components/Typography'
-import BiometricAuth from './BiometricAuth'
+import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 
-interface PaymentTransferModuleProps {
-  accountBalance: number
-}
-
-const PaymentTransferModule: React.FC<PaymentTransferModuleProps> = ({
-  accountBalance
-}) => {
+const PaymentTransferModule = () => {
+  const router = useRouter()
   const [recipient, setRecipient] = useState('')
   const [amount, setAmount] = useState('')
   const [note, setNote] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
-  const [showAuth, setShowAuth] = useState(false)
+  const currentBalance = useTransactionStore((state) => state.currentBalance)
+  const setCurrentBalance = useTransactionStore(
+    (state) => state.setCurrentBalance
+  )
+  const setTransactionDetails = useTransactionStore(
+    (state) => state.setTransactionDetails
+  )
 
   const handleTransfer = () => {
     if (!recipient.trim()) {
@@ -34,50 +36,67 @@ const PaymentTransferModule: React.FC<PaymentTransferModuleProps> = ({
       return
     }
 
-    if (amountValue > accountBalance) {
+    if (amountValue > currentBalance) {
       Alert.alert('Error', 'Insufficient funds')
       return
     }
 
-    setShowAuth(true)
+    router.push({
+      pathname: '/biometricAuth',
+      params: { recipient, amount, note, balance: currentBalance }
+    })
   }
 
   const handleAuthSuccess = () => {
+    const amountValue = parseFloat(amount)
     setIsProcessing(true)
-    // Simulate processing time
+
     setTimeout(() => {
+      const newBalance = currentBalance - amountValue
+      setCurrentBalance(newBalance)
       setIsProcessing(false)
-      Alert.alert('Success', 'Payment transferred successfully')
+
+      setTransactionDetails({
+        recipient,
+        amount,
+        note,
+        balance: newBalance
+      })
+
       setRecipient('')
       setAmount('')
       setNote('')
     }, 1500)
   }
 
-  const handleAuthFailure = () => {
-    setShowAuth(false)
-  }
+  // if (showAuth) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <BiometricAuth
+  //         onAuthSuccess={handleAuthSuccess}
+  //         onAuthFailure={handleAuthFailure}
+  //       />
+  //       <TouchableOpacity
+  //         style={styles.cancelButton}
+  //         onPress={handleCancelAuth}
+  //       >
+  //         <AppText style={styles.cancelButtonText}>Cancel</AppText>
+  //       </TouchableOpacity>
+  //     </View>
+  //   )
+  // }
 
-  const handleCancelAuth = () => {
-    setShowAuth(false)
-  }
-
-  if (showAuth) {
-    return (
-      <View style={styles.container}>
-        <BiometricAuth
-          onAuthSuccess={handleAuthSuccess}
-          onAuthFailure={handleAuthFailure}
-        />
-        <TouchableOpacity
-          style={styles.cancelButton}
-          onPress={handleCancelAuth}
-        >
-          <AppText style={styles.cancelButtonText}>Cancel</AppText>
-        </TouchableOpacity>
-      </View>
-    )
-  }
+  // if (showConfirmation) {
+  //   return (
+  //     <TransactionConfirmation
+  //       recipient={transactionDetails.recipient}
+  //       amount={transactionDetails.amount}
+  //       note={transactionDetails.note}
+  //       balance={transactionDetails.balance}
+  //       onBack={handleBackToHome}
+  //     />
+  //   )
+  // }
 
   return (
     <View style={styles.container}>
@@ -87,7 +106,7 @@ const PaymentTransferModule: React.FC<PaymentTransferModuleProps> = ({
         <View style={styles.balanceContainer}>
           <AppText style={styles.balanceLabel}>Total Balance</AppText>
           <AppText weight='bold' style={styles.balanceAmount}>
-            ${accountBalance.toFixed(2)}
+            ${currentBalance.toFixed(2)}
           </AppText>
         </View>
 
