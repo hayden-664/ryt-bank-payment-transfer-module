@@ -3,7 +3,7 @@ import { useTransactionStore } from '@/stores/useTransactionStore'
 import { COLORS, RADIUS } from '@/constants/theme'
 import { useRouter } from 'expo-router'
 import React from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
 
 const TransactionConfirmation: React.FC = () => {
   const router = useRouter()
@@ -53,12 +53,12 @@ const TransactionConfirmation: React.FC = () => {
           </AppText>
         </View>
       </ScrollView>
-
-      <View style={styles.buttonContainer}>
-        <AppText style={styles.buttonText} onPress={handleBackToHome}>
-          Back to Home
-        </AppText>
-      </View>
+      <TouchableOpacity
+        style={styles.buttonContainer}
+        onPress={handleBackToHome}
+      >
+        <AppText style={styles.buttonText}>Back to Home</AppText>
+      </TouchableOpacity>
     </View>
   )
 }
