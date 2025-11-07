@@ -28,7 +28,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1 }} edges={['top', 'bottom']}>
+      <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
         <Stack
           screenOptions={{
             headerShown: false
@@ -40,6 +40,7 @@ export default function RootLayout() {
 }
 
 const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#fff' },
   loadingContainer: {
     flex: 1
   },
