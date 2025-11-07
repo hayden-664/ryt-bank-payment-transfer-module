@@ -31,6 +31,7 @@ const PaymentTransferModule = () => {
     }
 
     const amountValue = parseFloat(amount)
+
     if (isNaN(amountValue) || amountValue <= 0) {
       Alert.alert('Error', 'Please enter a valid amount')
       return
@@ -41,62 +42,18 @@ const PaymentTransferModule = () => {
       return
     }
 
-    router.push({
-      pathname: '/biometricAuth',
-      params: { recipient, amount, note, balance: currentBalance }
+    const newBalance = currentBalance - amountValue
+    setCurrentBalance(newBalance)
+
+    setTransactionDetails({
+      recipient,
+      amount,
+      note,
+      balance: newBalance
     })
+
+    router.push('/biometricAuth')
   }
-
-  const handleAuthSuccess = () => {
-    const amountValue = parseFloat(amount)
-    setIsProcessing(true)
-
-    setTimeout(() => {
-      const newBalance = currentBalance - amountValue
-      setCurrentBalance(newBalance)
-      setIsProcessing(false)
-
-      setTransactionDetails({
-        recipient,
-        amount,
-        note,
-        balance: newBalance
-      })
-
-      setRecipient('')
-      setAmount('')
-      setNote('')
-    }, 1500)
-  }
-
-  // if (showAuth) {
-  //   return (
-  //     <View style={styles.container}>
-  //       <BiometricAuth
-  //         onAuthSuccess={handleAuthSuccess}
-  //         onAuthFailure={handleAuthFailure}
-  //       />
-  //       <TouchableOpacity
-  //         style={styles.cancelButton}
-  //         onPress={handleCancelAuth}
-  //       >
-  //         <AppText style={styles.cancelButtonText}>Cancel</AppText>
-  //       </TouchableOpacity>
-  //     </View>
-  //   )
-  // }
-
-  // if (showConfirmation) {
-  //   return (
-  //     <TransactionConfirmation
-  //       recipient={transactionDetails.recipient}
-  //       amount={transactionDetails.amount}
-  //       note={transactionDetails.note}
-  //       balance={transactionDetails.balance}
-  //       onBack={handleBackToHome}
-  //     />
-  //   )
-  // }
 
   return (
     <View style={styles.container}>

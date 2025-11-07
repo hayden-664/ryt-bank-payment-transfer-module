@@ -3,6 +3,7 @@ import { COLORS } from '@/constants/theme'
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
+import * as LocalAuthentication from 'expo-local-authentication'
 
 const BiometricAuth: React.FC = () => {
   const router = useRouter()
@@ -10,12 +11,44 @@ const BiometricAuth: React.FC = () => {
 
   const authenticateWithBiometrics = async () => {
     setIsAuthenticating(true)
+
     try {
+      // const hasHardware = await LocalAuthentication.hasHardwareAsync()
+      // if (!hasHardware) {
+      //   Alert.alert('Error', 'Biometric hardware not available')
+      //   return
+      // }
+
+      // const isEnrolled = await LocalAuthentication.isEnrolledAsync()
+      // if (!isEnrolled) {
+      //   Alert.alert('Error', 'No biometrics enrolled')
+      //   return
+      // }
+
+      // const authResult = await LocalAuthentication.authenticateAsync({
+      //   promptMessage: 'Authenticate',
+      //   cancelLabel: 'Cancel',
+      //   fallbackLabel: 'Use PIN'
+      // })
+
+      // if (authResult.success) {
+      //   router.push('/transactionConfirmation')
+      // } else {
+      //   Alert.alert('Authentication Failed', 'Could not verify your identity')
+      // }
+
+      // For testing
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      router.push('/transactionConfirmation')
+      const simulatedSuccess = true
+
+      if (simulatedSuccess) {
+        router.push('/transactionConfirmation')
+      } else {
+        Alert.alert('Authentication Failed', 'Could not verify your identity')
+      }
     } catch (error) {
-      console.error(error)
+      console.error('Authentication error:', error)
       Alert.alert('Authentication Error', 'Failed to authenticate')
     } finally {
       setIsAuthenticating(false)
