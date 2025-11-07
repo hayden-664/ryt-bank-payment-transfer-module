@@ -4,49 +4,71 @@ import { useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import { Alert, StyleSheet, TouchableOpacity, View } from 'react-native'
 import * as LocalAuthentication from 'expo-local-authentication'
+import { useTransactionStore } from '@/stores/useTransactionStore'
 
 const BiometricAuth: React.FC = () => {
   const router = useRouter()
   const [isAuthenticating, setIsAuthenticating] = useState(false)
+  const currentBalance = useTransactionStore((state) => state.currentBalance)
+  const setCurrentBalance = useTransactionStore(
+    (state) => state.setCurrentBalance
+  )
+  const transactionDetails = useTransactionStore(
+    (state) => state.transactionDetails
+  )
+  const setTransactionDetails = useTransactionStore(
+    (state) => state.setTransactionDetails
+  )
 
   const authenticateWithBiometrics = async () => {
     setIsAuthenticating(true)
 
     try {
-      // const hasHardware = await LocalAuthentication.hasHardwareAsync()
-      // if (!hasHardware) {
-      //   Alert.alert('Error', 'Biometric hardware not available')
-      //   return
-      // }
+      const hasHardware = await LocalAuthentication.hasHardwareAsync()
+      if (!hasHardware) {
+        Alert.alert('Error', 'Biometric hardware not available')
+        return
+      }
 
-      // const isEnrolled = await LocalAuthentication.isEnrolledAsync()
-      // if (!isEnrolled) {
-      //   Alert.alert('Error', 'No biometrics enrolled')
-      //   return
-      // }
+      const isEnrolled = await LocalAuthentication.isEnrolledAsync()
+      if (!isEnrolled) {
+        Alert.alert('Error', 'No biometrics enrolled')
+        return
+      }
 
-      // const authResult = await LocalAuthentication.authenticateAsync({
-      //   promptMessage: 'Authenticate',
-      //   cancelLabel: 'Cancel',
-      //   fallbackLabel: 'Use PIN'
-      // })
+      const authResult = await LocalAuthentication.authenticateAsync({
+        promptMessage: 'Authenticate',
+        cancelLabel: 'Cancel',
+        fallbackLabel: 'Use PIN'
+      })
 
-      // if (authResult.success) {
-      //   router.push('/transactionConfirmation')
-      // } else {
-      //   Alert.alert('Authentication Failed', 'Could not verify your identity')
-      // }
+      if (authResult.success) {
+        await new Promise((resolve) => setTimeout(resolve, 2000))
 
-      // For testing
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+        const amountValue = parseFloat(transactionDetails.amount)
+        const newBalance = currentBalance - amountValue
 
-      const simulatedSuccess = true
+        setCurrentBalance(newBalance)
+        setTransactionDetails({
+          ...transactionDetails,
+          balance: newBalance
+        })
 
-      if (simulatedSuccess) {
         router.push('/transactionConfirmation')
       } else {
         Alert.alert('Authentication Failed', 'Could not verify your identity')
       }
+
+      // For testing
+      // await new Promise((resolve) => setTimeout(resolve, 1500))
+
+      // const simulatedSuccess = true
+
+      // if (simulatedSuccess) {
+      //   router.push('/transactionConfirmation')
+      // } else {
+      //   Alert.alert('Authentication Failed', 'Could not verify your identity')
+      // }
     } catch (error) {
       console.error('Authentication error:', error)
       Alert.alert('Authentication Error', 'Failed to authenticate')
