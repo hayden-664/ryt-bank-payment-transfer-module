@@ -1,5 +1,5 @@
 {
-  "name": "payment-transfer-module1",
+  "name": "payment-transfer-module",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
