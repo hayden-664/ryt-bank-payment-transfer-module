@@ -11,6 +11,8 @@ import {
   TouchableOpacity
 } from 'react-native'
 import Button from '@/components/Button'
+import * as Contacts from 'expo-contacts'
+import { Ionicons } from '@expo/vector-icons'
 
 const PaymentTransferModule = () => {
   const router = useRouter()
@@ -58,6 +60,41 @@ const PaymentTransferModule = () => {
     router.push('/biometricAuth')
   }
 
+  const pickContact = async () => {
+    const { status } = await Contacts.requestPermissionsAsync()
+    if (status !== 'granted') {
+      Alert.alert(
+        'Permission Denied',
+        'Please grant contact permissions in your device settings.'
+      )
+      return
+    }
+
+    try {
+      const contact = await Contacts.presentContactPickerAsync()
+
+      if (contact) {
+        if (contact.phoneNumbers && contact.phoneNumbers.length > 0) {
+          const phoneNumber = contact.phoneNumbers[0].number
+          if (phoneNumber) {
+            const cleanedNumber = phoneNumber.replace(/[\s-()]/g, '')
+            setRecipient(cleanedNumber)
+          } else {
+            Alert.alert('Error', 'Could not retrieve the phone number.')
+          }
+        } else {
+          Alert.alert(
+            'No Phone Number',
+            'The selected contact does not have a phone number.'
+          )
+        }
+      }
+    } catch (error) {
+      console.error('Error picking contact:', error)
+      Alert.alert('Error', 'An error occurred while selecting a contact.')
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Heading weight='regular' style={styles.title}>
@@ -72,13 +109,22 @@ const PaymentTransferModule = () => {
           </AppText>
         </View>
 
-        <AppInput
-          style={styles.input}
-          placeholder='Recipient'
-          placeholderTextColor='#9299a1'
-          value={recipient}
-          onChangeText={setRecipient}
-        />
+        <View style={styles.inputWrapper}>
+          <AppInput
+            style={[styles.input, { flex: 1 }]}
+            placeholder='Recipient'
+            placeholderTextColor='#9299a1'
+            value={recipient}
+            onChangeText={setRecipient}
+          />
+          <TouchableOpacity onPress={pickContact} style={styles.iconButton}>
+            <Ionicons
+              name='person-circle-outline'
+              size={24}
+              color={COLORS.primary}
+            />
+          </TouchableOpacity>
+        </View>
 
         <AppInput
           style={styles.input}
@@ -99,22 +145,22 @@ const PaymentTransferModule = () => {
 
         <Button title='Transfer' onPress={handleTransfer} variant='primary' />
       </View>
-      <View style={styles.card}>
-        <AppText
-          style={{
-            color: COLORS.primary,
-            borderBottomWidth: 1,
-            borderBottomColor: COLORS.primary,
-            textAlign: 'center',
-            fontSize: 12,
-            paddingBottom: 5
-          }}
-        >
-          Recent
-        </AppText>
-        <ScrollView style={{ flexGrow: 1 }}>
-          {transactionDetails.length > 0 ? (
-            [...transactionDetails].reverse().map((txn, index) => (
+      {transactionDetails.length > 0 && (
+        <View style={styles.card}>
+          <AppText
+            style={{
+              color: COLORS.primary,
+              borderBottomWidth: 1,
+              borderBottomColor: COLORS.primary,
+              textAlign: 'center',
+              fontSize: 14,
+              paddingBottom: 5
+            }}
+          >
+            Recent
+          </AppText>
+          <ScrollView style={styles.scrollView}>
+            {[...transactionDetails].reverse().map((txn, index) => (
               <View key={index} style={styles.transactionItem}>
                 <TouchableOpacity
                   style={styles.transactionDetail}
@@ -132,16 +178,10 @@ const PaymentTransferModule = () => {
                   </AppText>
                 </TouchableOpacity>
               </View>
-            ))
-          ) : (
-            <AppText
-              style={{ fontSize: 12, textAlign: 'center', color: '#9299a1', paddingVertical: 30 }}
-            >
-              No transactions yet
-            </AppText>
-          )}
-        </ScrollView>
-      </View>
+            ))}
+          </ScrollView>
+        </View>
+      )}
     </View>
   )
 }
@@ -190,10 +230,14 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: 'white',
     padding: 20,
-    borderRadius: RADIUS.default
+    borderRadius: RADIUS.default,
+    flex: 1
+  },
+  scrollView: {
+    flex: 1
   },
   transactionItem: {
-    paddingVertical: 10,
+    paddingVertical: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#f0f0f0',
     backgroundColor: 'transparent'
@@ -204,8 +248,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   transactionText: {
-    fontSize: 12,
+    fontSize: 14,
     color: '#333'
+  },
+  iconButton: { padding: 10 },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 })
 
