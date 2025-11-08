@@ -3,12 +3,14 @@ import { useTransactionStore } from '@/stores/useTransactionStore'
 import { COLORS, RADIUS } from '@/constants/theme'
 import { useRouter } from 'expo-router'
 import React from 'react'
-import { ScrollView, StyleSheet, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import Button from '@/components/Button'
 
 const TransactionConfirmation: React.FC = () => {
   const router = useRouter()
   const { transactionDetails } = useTransactionStore()
+  const latestTransaction =
+    transactionDetails[transactionDetails.length - 1] || {}
 
   const handleBackToHome = () => {
     router.push('/')
@@ -21,32 +23,32 @@ const TransactionConfirmation: React.FC = () => {
       </Heading>
 
       <View style={styles.detailsContainer}>
-        <View style={styles.detailsWrapper}>
+        <View style={styles.card}>
           <View style={styles.detailRow}>
             <AppText style={styles.detailLabel}>Recipient:</AppText>
             <AppText style={styles.detailValue}>
-              {transactionDetails.recipient}
+              {latestTransaction.recipient}
             </AppText>
           </View>
 
           <View style={styles.detailRow}>
             <AppText style={styles.detailLabel}>Amount:</AppText>
             <AppText style={styles.detailValue}>
-              ${transactionDetails.amount}
+              ${latestTransaction.amount}
             </AppText>
           </View>
 
           <View style={styles.detailRow}>
             <AppText style={styles.detailLabel}>Note:</AppText>
             <AppText style={styles.detailValue}>
-              {transactionDetails.note || 'None'}
+              {latestTransaction.note || 'None'}
             </AppText>
           </View>
 
           <View style={styles.detailRow}>
             <AppText style={styles.detailLabel}>Balance:</AppText>
             <AppText style={styles.detailValue}>
-              ${transactionDetails.balance.toFixed(2)}
+              ${latestTransaction.balance.toFixed(2)}
             </AppText>
           </View>
 
@@ -82,7 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginBottom: 30
   },
-  detailsWrapper: {
+  card: {
     backgroundColor: 'white',
     padding: 15,
     borderRadius: RADIUS.default,

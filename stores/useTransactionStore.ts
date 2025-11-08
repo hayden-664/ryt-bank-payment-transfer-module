@@ -9,19 +9,25 @@ interface TransactionDetails {
 
 interface TransactionStore {
   currentBalance: number
-  transactionDetails: TransactionDetails
+  transactionDetails: TransactionDetails[]
+  pendingTransaction: TransactionDetails | null
   setCurrentBalance: (balance: number) => void
-  setTransactionDetails: (details: TransactionDetails) => void
+  setPendingTransaction: (details: TransactionDetails) => void
+  addTransaction: (details: TransactionDetails) => void
   resetTransactionDetails: () => void
+  resetPendingTransaction: () => void
 }
 
 export const useTransactionStore = create<TransactionStore>((set) => ({
   currentBalance: 1500.0,
-  transactionDetails: { recipient: '', amount: '', note: '', balance: 0 },
+  transactionDetails: [],
+  pendingTransaction: null,
   setCurrentBalance: (balance) => set({ currentBalance: balance }),
-  setTransactionDetails: (details) => set({ transactionDetails: details }),
-  resetTransactionDetails: () =>
-    set({
-      transactionDetails: { recipient: '', amount: '', note: '', balance: 0 }
-    })
+  setPendingTransaction: (details) => set({ pendingTransaction: details }),
+  addTransaction: (details) =>
+    set((state) => ({
+      transactionDetails: [...state.transactionDetails, details]
+    })),
+  resetTransactionDetails: () => set({ transactionDetails: [] }),
+  resetPendingTransaction: () => set({ pendingTransaction: null })
 }))

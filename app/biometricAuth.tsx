@@ -14,18 +14,20 @@ const BiometricAuth: React.FC = () => {
   const setCurrentBalance = useTransactionStore(
     (state) => state.setCurrentBalance
   )
-  const transactionDetails = useTransactionStore(
-    (state) => state.transactionDetails
+  const pendingTransaction = useTransactionStore(
+    (state) => state.pendingTransaction
   )
-  const setTransactionDetails = useTransactionStore(
-    (state) => state.setTransactionDetails
-  )
+  const addTransaction = useTransactionStore((state) => state.addTransaction)
 
   const handleBackToHome = () => {
     router.push('/')
   }
 
   const authenticateWithBiometrics = async () => {
+    if (!pendingTransaction) {
+      Alert.alert('Error', 'No pending transaction found.')
+      return
+    }
     setIsAuthenticating(true)
 
     try {
@@ -50,12 +52,17 @@ const BiometricAuth: React.FC = () => {
       // if (authResult.success) {
       //   await new Promise((resolve) => setTimeout(resolve, 2000))
 
-      //   const amountValue = parseFloat(transactionDetails.amount)
+      //   if (!pendingTransaction) {
+      //     Alert.alert('Error', 'No pending transaction found.')
+      //     return
+      //   }
+
+      //   const amountValue = parseFloat(pendingTransaction.amount)
       //   const newBalance = currentBalance - amountValue
 
       //   setCurrentBalance(newBalance)
-      //   setTransactionDetails({
-      //     ...transactionDetails,
+      //   addTransaction({
+      //     ...pendingTransaction,
       //     balance: newBalance
       //   })
 
@@ -70,12 +77,12 @@ const BiometricAuth: React.FC = () => {
       const simulatedSuccess = true
 
       if (simulatedSuccess) {
-        const amountValue = parseFloat(transactionDetails.amount)
+        const amountValue = parseFloat(pendingTransaction.amount)
         const newBalance = currentBalance - amountValue
 
         setCurrentBalance(newBalance)
-        setTransactionDetails({
-          ...transactionDetails,
+        addTransaction({
+          ...pendingTransaction,
           balance: newBalance
         })
         router.push('/transactionConfirmation')
