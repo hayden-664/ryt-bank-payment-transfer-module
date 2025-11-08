@@ -55,7 +55,8 @@ React Native + Expo + Typescript + Zustand
 
 ## Challenges faced
 
-1. When testing on mobile device, there is a visible rounded corners when navigating to different screens. It looks fine my XCode simulator.
+1. When testing on mobile device, there is a visible rounded corners when navigating between different screens. It looks fine my XCode simulator.
 
 
 ## Demo video
+[Demo video on Google Drive](https://drive.google.com/drive/folders/1w_b_-SrtE3zuVacLvKJrepMp1XREuj6X?usp=sharing)
