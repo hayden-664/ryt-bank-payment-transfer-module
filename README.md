@@ -56,7 +56,7 @@ React Native + Expo + Typescript + Zustand
 ## Design decisions
 1. I followed the style (font, color, border radius) of Ryt Bank by referring to the app and website.
 2. Created primary button (primary bg color) and secondary buttons (white bg color with primary border color) based on Ryt Bank's design.
-3. Heading to follow the same font size as Ryt Bank's app
+3. Heading to follow the same font size as Ryt Bank's app.
 
 
 ## Challenges faced
