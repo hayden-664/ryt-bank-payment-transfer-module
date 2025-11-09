@@ -53,6 +53,12 @@ React Native + Expo + Typescript + Zustand
 7. Click on run on the top left (play button)
 
 
+## Design decisions
+1. I followed the style (font, color, border radius) of Ryt Bank by referring to the app and website.
+2. Created primary button (primary bg color) and secondary buttons (white bg color with primary border color) based on Ryt Bank's design.
+3. Heading to follow same the same font size as Ryt Bank's app
+
+
 ## Challenges faced
 
 1. When testing on mobile device, there is a visible rounded corners when navigating between different screens. It looks fine my XCode simulator.
